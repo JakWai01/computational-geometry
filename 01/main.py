@@ -159,7 +159,7 @@ def on_input(event):
         print(ovals[coord])
         if coord in ovals:
             print("WE GOT A MATCH")
-        canvas.itemconfig(ovals[coord], fill="red")
+        canvas.itemconfig(ovals[coord], outline="red")
     print(result)
 
 
