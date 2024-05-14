@@ -2,6 +2,7 @@ from tkinter import Tk, Canvas, Entry
 import statistics
 import random
 import heapq
+from time import process_time
 
 root = Tk()
 root.title("PST Visualisation")
@@ -150,18 +151,27 @@ def on_input(event):
     segments = input_text.split(" ")
     if len(segments) != 4:
         print("Incorrect number of arguments")
-    (x0, y0, x1, y1) = map(lambda s: int(s), segments)
+    (x0, x1, y0, y1) = map(lambda s: int(s), segments)
     canvas.delete("bounding_box")
-    print_bounding_box((x0, x1), (y0, y1))
-    result = range_query_2d(tree, (x0, y0), (x1, y1))
+    print_bounding_box((x0, y0), (x1, y1))
+    start = process_time()
+    result = range_query_2d(tree, (x0, x1), (y0, y1))
+    end = process_time()
+    print(str(end - start) + " seconds")
     canvas.itemconfig("point", outline="black")
     for coord in result:
-        print(coord)
-        print(ovals[coord])
-        if coord in ovals:
-            print("WE GOT A MATCH")
         canvas.itemconfig(ovals[coord], outline="red")
     print(result)
+
+    print("Naive query")
+    naive_start = process_time()
+    naive_result = []
+    for point in points:
+        if x0 <= point[0] <= x1 and y0 <= point[1] <= y1:
+            naive_result.append(point)
+    naive_end = process_time()
+    print(str(naive_end - naive_start) + " seconds")
+    print(naive_result)
 
 
 input_entry = Entry(root)
