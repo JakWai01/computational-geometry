@@ -11,7 +11,7 @@ ovals = {}
 
 
 def print_point(x, y):
-    point = canvas.create_oval(x, y, x, y)
+    point = canvas.create_oval(x, y, x, y, tags="point")
     ovals[(x, y)] = point
 
 
@@ -154,6 +154,7 @@ def on_input(event):
     canvas.delete("bounding_box")
     print_bounding_box((x0, x1), (y0, y1))
     result = range_query_2d(tree, (x0, y0), (x1, y1))
+    canvas.itemconfig("point", outline="black")
     for coord in result:
         print(coord)
         print(ovals[coord])
