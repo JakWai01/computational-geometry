@@ -75,7 +75,7 @@ def find_min_y_point(points):
 
 
 def remove_point_from_data(index, data):
-    return points[:index] + points[index + 1 :]
+    return data[:index] + data[index + 1 :]
 
 
 def calculate_median(data):
@@ -88,12 +88,6 @@ class Node:
         self.node_point = node_point
         self.left_subtree = left_subtree
         self.right_subtree = right_subtree
-
-
-class Node:
-    def __init__(self, key, data):
-        self.key = key
-        self.data = data
 
 
 def construct_pst(data):
@@ -116,72 +110,42 @@ def construct_pst(data):
 
         return Node(node_key, node_point, left_subtree, right_subtree)
     elif len(data) == 1:
-        return Node(None, Node, None, None)
+        return Node(None, data[0], None, None)
     elif len(data) == 0:
         return None
 
 
-class Node:
-    def __init__(self, point):
-        self.point = point
-        self.left = None
-        self.right = None
-
-
-def build_pst(points):
-    if not points:
-        return None
-
-    min_heap = [(point[0], point) for point in points]
-    heapq.heapify(min_heap)
-
-    root = None
-    while min_heap:
-        _, point = heapq.heappop(min_heap)
-        root = insert(root, point)
-
-    return root
-
-
-def insert(root, point):
-    if not root:
-        return Node(point)
-
-    if point[0] < root.point[0]:
-        root.left = insert(root.left, point)
-    else:
-        root.right = insert(root.right, point)
-
-    return root
-
-
-def range_query(root, x_min, x_max, y_min, y_max):
-    if not root:
+def range_query_2d(node, query_range_x, query_range_y):
+    if node is None:
         return []
 
     result = []
-    stack = [root]
-    while stack:
-        node = stack.pop()
-        if x_min <= node.point[0] <= x_max and y_min <= node.point[1] <= y_max:
-            result.append(node.point)
 
-        if node.left and x_min <= node.point[0]:
-            stack.append(node.left)
+    # Check if the node's point is within the query range
+    if (
+        query_range_x[0] <= node.node_point[0] <= query_range_x[1]
+        and query_range_y[0] <= node.node_point[1] <= query_range_y[1]
+    ):
+        result.append(node.node_point)
 
-        if node.right and node.point[0] <= x_max:
-            stack.append(node.right)
+    # Recursively search left subtree if it could intersect with the query range
+    if node.left_subtree is not None and query_range_x[0] <= node.node_key:
+        result.extend(range_query_2d(node.left_subtree, query_range_x, query_range_y))
+
+    # Recursively search right subtree if it could intersect with the query range
+    if node.right_subtree is not None and query_range_x[1] >= node.node_key:
+        result.extend(range_query_2d(node.right_subtree, query_range_x, query_range_y))
 
     return result
 
 
-# node = construct_pst(points)
-# print(node.node_point)
-# print(node.left_subtree)
-# print(node.right_subtree)
-points = [(3, 5), (1, 2), (4, 6), (2, 3), (5, 7)]
-pst_root = build_pst(points)
+# points = [(2, 3), (5, 4), (9, 6), (4, 7), (8, 1)]
+tree = construct_pst(points)
 
-x_min, x_max, y_min, y_max = 2, 4, 4, 7
-result = range_query(pst_root, x_min, x_max, y_min, y_max)
+# Query range
+query_range_x = (3, 8)
+query_range_y = (2, 6)
+
+# Perform the query
+result = range_query_2d(tree, query_range_x, query_range_y)
 print(result)
