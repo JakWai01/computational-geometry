@@ -1,28 +1,35 @@
-from tkinter import Tk, Canvas
+from tkinter import Tk, Canvas, Entry
 import statistics
 import random
 import heapq
 
 root = Tk()
+root.title("PST Visualisation")
 canvas = Canvas(root)
 canvas.pack()
+ovals = {}
 
 
 def print_point(x, y):
-    canvas.create_oval(x, y, x, y)
+    point = canvas.create_oval(x, y, x, y)
+    ovals[(x, y)] = point
 
 
 def print_line(a, b):
     canvas.create_line(a[0], a[1], b[0], b[1])
 
 
+points = []
+
+
 def handle_click(click_event):
     x = canvas.canvasx(click_event.x)
     y = canvas.canvasy(click_event.y)
     print_point(x, y)
+    points.append((x, y))
+    construct_pst(points)
+    print("Computed updated pst for points")
 
-
-points = []
 
 with open("coords.txt") as f:
     for line in f:
@@ -49,14 +56,7 @@ print_line((0, 10), (30, 50))
 
 # Computation of axis-aligned bounding box
 def print_bounding_box(a, b):
-    canvas.create_rectangle(a[0], a[1], b[0], b[1])
-
-
-print_bounding_box((20, 20), (70, 80))
-
-
-canvas.bind("<Button-1>", handle_click)
-root.mainloop()
+    canvas.create_rectangle(a[0], a[1], b[0], b[1], tags="bounding_box")
 
 
 def find_min_y_point(points):
@@ -139,13 +139,32 @@ def range_query_2d(node, query_range_x, query_range_y):
     return result
 
 
-# points = [(2, 3), (5, 4), (9, 6), (4, 7), (8, 1)]
 tree = construct_pst(points)
 
-# Query range
-query_range_x = (3, 8)
-query_range_y = (2, 6)
+canvas.bind("<Button-1>", handle_click)
 
-# Perform the query
-result = range_query_2d(tree, query_range_x, query_range_y)
-print(result)
+
+def on_input(event):
+    input_text = input_entry.get()
+    print("Input received:", input_text)
+    segments = input_text.split(" ")
+    if len(segments) != 4:
+        print("Incorrect number of arguments")
+    (x0, y0, x1, y1) = map(lambda s: int(s), segments)
+    canvas.delete("bounding_box")
+    print_bounding_box((x0, x1), (y0, y1))
+    result = range_query_2d(tree, (x0, y0), (x1, y1))
+    for coord in result:
+        print(coord)
+        print(ovals[coord])
+        if coord in ovals:
+            print("WE GOT A MATCH")
+        canvas.itemconfig(ovals[coord], fill="red")
+    print(result)
+
+
+input_entry = Entry(root)
+input_entry.pack()
+input_entry.bind("<Return>", on_input)
+
+root.mainloop()
