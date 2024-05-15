@@ -1,0 +1,29 @@
+# PST Implementation
+
+## Usage
+
+```
+python3 main.py
+```
+
+## Query
+
+A query can be executed by entering the query range into the corresponding input field inside of the UI. A query like e.g. [10, 20] x [5, 90] can be entered in the following format: 
+
+```
+10 20 5 90
+```
+
+## Example result
+
+```
+Input received: 10 20 30 40
+PST query took 6.5132999999995e-05 seconds
+Result contains: 2 points
+Query result: [(12, 35), (17, 34)]
+Naive query took 9.524900000000558e-05 seconds
+Result contains: 2 points
+Query result: [(12, 35), (17, 34)]
+```
+
+![alt text](image.png)
