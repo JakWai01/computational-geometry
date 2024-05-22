@@ -41,7 +41,7 @@ def generate_random_points(n):
 
 # Computation of axis-aligned bounding box
 def print_bounding_box(a, b):
-    canvas.create_rectangle(a[0], a[1], b[0], b[1], tags="bounding_box")
+    canvas.create_rectangle(a[0], a[1], b[0], 1000, tags="bounding_box")
 
 def find_min_y_point(points):
     if not points:
@@ -98,7 +98,7 @@ def range_query_2d(node, query_range_x, query_range_y):
     # Check if the node's point is within the query range
     if (
         query_range_x[0] <= node.node_point[0] <= query_range_x[1]
-        and query_range_y[0] <= node.node_point[1] <= query_range_y[1]
+        and query_range_y[0] <= node.node_point[1]
     ):
         result.append(node.node_point)
 
