@@ -92,22 +92,21 @@ def construct_pst(data):
 def query(node, min_key, max_key, max_priority):
     result = []
 
-    print("args: ", min_key, max_key, max_priority)
-
     def _query(node):
         if node == None or node.node_point == None:
             return
 
-        # Checking here simulates a heap throughout the execution
+        # Checking here simulates a min heap throughout the execution in O(k)
         if node.node_point[1] <= max_priority:
             if min_key <= node.node_point[0] <= max_key:
                 result.append(node.node_point)
         else:
             return
 
-        if max_key <= node.node_key:
+        # Tree traversal in O(log n) 
+        if node.node_key is not None and max_key <= node.node_key:
             _query(node.left_subtree)
-        elif min_key > node.node_key:
+        elif node.node_key is not None and min_key > node.node_key:
             _query(node.right_subtree)
         else:
             _query(node.left_subtree)

@@ -1,5 +1,9 @@
 # PST Implementation
 
+## Update
+
+Da das Koordinatensystem gedreht ist, ist das Rechteck hier nach oben geöffnet visualisiert. Kleine y Werte sind also oben und große unten. An der Berechnung ändert dies nichts.
+
 ## Usage
 
 ```
@@ -23,13 +27,13 @@ e.g.
 ## Example result
 
 ```
-Input received: 10 20 30 40
-PST query took 6.5132999999995e-05 seconds
-Result contains: 2 points
-Query result: [(12, 35), (17, 34)]
-Naive query took 9.524900000000558e-05 seconds
-Result contains: 2 points
-Query result: [(12, 35), (17, 34)]
+Input received: 10 20 40
+PST query took 4.2039000000021476e-05 seconds
+Result contains: 12 points
+Query result: [(11, 8), (11, 19), (12, 7), (14, 15), (14, 17), (15, 6), (15, 10), (16, 0), (16, 23), (17, 23), (18, 25), (19, 18)]
+Naive query took 9.681200000000167e-05 seconds
+Result contains: 12 points
+Query result: [(11, 8), (11, 19), (12, 7), (14, 15), (14, 17), (15, 6), (15, 10), (16, 0), (16, 23), (17, 23), (18, 25), (19, 18)]
 ```
 
-![alt text](image.png)
+![alt text](image-1.png)
