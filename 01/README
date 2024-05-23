@@ -8,10 +8,16 @@ python3 main.py
 
 ## Query
 
-A query can be executed by entering the query range into the corresponding input field inside of the UI. A query like e.g. [10, 20] x [5, 90] can be entered in the following format: 
+A query can be executed by entering the query range into the corresponding input field inside of the UI. A query like e.g. [l, r] x [inf, u] can be entered in the following format: 
 
 ```
-10 20 5 90
+l r u
+```
+
+e.g. 
+
+```
+10 20 40
 ```
 
 ## Example result

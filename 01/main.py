@@ -40,8 +40,8 @@ def generate_random_points(n):
         points.append(coord)
 
 # Computation of axis-aligned bounding box
-def print_bounding_box(a, b):
-    canvas.create_rectangle(a[0], a[1], b[0], 1000, tags="bounding_box")
+def print_bounding_box(l, r, u):
+    canvas.create_rectangle(l, u, r, 0, tags="bounding_box")
 
 def find_min_y_point(points):
     if not points:
@@ -89,62 +89,69 @@ def construct_pst(data):
     elif len(data) == 0:
         return None
 
-def range_query_2d(node, query_range_x, query_range_y):
-    if node is None:
-        return []
-
+def query(node, min_key, max_key, max_priority):
     result = []
 
-    # Check if the node's point is within the query range
-    if (
-        query_range_x[0] <= node.node_point[0] <= query_range_x[1]
-        and query_range_y[0] <= node.node_point[1]
-    ):
-        result.append(node.node_point)
+    print("args: ", min_key, max_key, max_priority)
 
-    # Recursively search left subtree if it could intersect with the query range
-    if node.left_subtree is not None and query_range_x[0] <= node.node_key:
-        result.extend(range_query_2d(node.left_subtree, query_range_x, query_range_y))
+    def _query(node):
+        if node == None or node.node_point == None:
+            return
 
-    # Recursively search right subtree if it could intersect with the query range
-    if node.right_subtree is not None and query_range_x[1] >= node.node_key:
-        result.extend(range_query_2d(node.right_subtree, query_range_x, query_range_y))
+        # Checking here simulates a heap throughout the execution
+        if node.node_point[1] <= max_priority:
+            if min_key <= node.node_point[0] <= max_key:
+                result.append(node.node_point)
+        else:
+            return
 
+        if max_key <= node.node_key:
+            _query(node.left_subtree)
+        elif min_key > node.node_key:
+            _query(node.right_subtree)
+        else:
+            _query(node.left_subtree)
+            _query(node.right_subtree)
+
+    _query(node)
     return result
 
 def on_input(event):
     input_text = input_entry.get()
     print("Input received:", input_text)
     segments = input_text.split(" ")
-    if len(segments) != 4:
+    if len(segments) != 3:
         print("Incorrect number of arguments")
-    (x0, x1, y0, y1) = map(lambda s: int(s), segments)
+    (x0, x1, y1) = map(lambda s: int(s), segments)
     canvas.delete("bounding_box")
-    print_bounding_box((x0, y0), (x1, y1))
+    print_bounding_box(x0, x1, y1)
 
     # Start PST query
     start = process_time()
-    result = range_query_2d(tree, (x0, x1), (y0, y1))
+    result = query(tree, x0, x1, y1)
     end = process_time()
     print(f"PST query took {end - start} seconds")
     canvas.itemconfig("point", outline="black")
     for coord in result:
         canvas.itemconfig(ovals[coord], outline="red")
     print(f"Result contains: {len(result)} points")
+    result.sort()
     print(f"Query result: {result}")
 
     # Start naive query
     naive_start = process_time()
     naive_result = []
     for point in points:
-        if x0 <= point[0] <= x1 and y0 <= point[1] <= y1:
+        if x0 <= point[0] <= x1 and point[1] <= y1:
             naive_result.append(point)
     naive_end = process_time()
     print(f"Naive query took {naive_end - naive_start} seconds")
     print(f"Result contains: {len(naive_result)} points")
+    naive_result.sort()
     print(f"Query result: {naive_result}")
 
 generate_random_points(1000)
+# points = [(7,1), (1,2), (2,4), (4,5), (3,8), (8,3), (5,4), (6,9)]
 
 # Print points to canvas
 for x, y in points:
