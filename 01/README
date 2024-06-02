@@ -2,7 +2,7 @@
 
 ## Update
 
-Da das Koordinatensystem gedreht ist, ist das Rechteck hier nach oben geöffnet visualisiert. Kleine y Werte sind also oben und große unten. An der Berechnung ändert dies nichts.
+Da das Koordinatensystem gedreht ist, ist das Rechteck hier nach oben geöffnet visualisiert. Kleine y Werte sind also oben und große unten. An der Berechnung ändert dies nichts. Außerdem werden Queries jetzt mit O((log n) + k) durchgeführt.
 
 ## Usage
 
