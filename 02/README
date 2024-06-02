@@ -1,0 +1,10 @@
+# Gift Wrapping Algorithm
+
+## Usage
+
+```
+python3 main.py
+```
+
+Der Start-Knopf startet bzw. restarted den Algorithmus wenn nötig. Der Next-Knopf führt den nächsten Schritt bis die gesamte Hülle bestimmt wurde.
+
